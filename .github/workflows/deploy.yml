@@ -23,7 +23,6 @@ jobs:
       - name: 設定 pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 10
           run_install: false  # 不自動安裝依賴，下一步手動執行
 
       # 第四步：安裝依賴
