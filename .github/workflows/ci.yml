@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 jobs:
   lint:
-    if: github.repository == 'anomixer/document'
+    if: github.repository == 'anomixer/onlyoffice-web-local'
     timeout-minutes: 30
     runs-on: ${{ matrix.os }}
     strategy:

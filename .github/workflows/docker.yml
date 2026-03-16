@@ -80,7 +80,7 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/orgs/${OWNER}/packages/container/${PACKAGE_NAME_ENCODED}/visibility" \
-              -d '{"visibility":"public"}' || echo "Note: Package visibility may need to be set manually at https://github.com/${{ github.repository }}/pkgs/container/document/settings"
+              -d '{"visibility":"public"}' || echo "Note: Package visibility may need to be set manually at https://github.com/${{ github.repository }}/pkgs/container/onlyoffice-web-local/settings"
           else
             echo "✅ Package set to public"
           fi
