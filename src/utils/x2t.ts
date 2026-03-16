@@ -42,6 +42,7 @@ type SupportedExtension =
 declare global {
     interface Window {
         Module: EmscriptenModule
+        DocsAPI: any
     }
 }
 

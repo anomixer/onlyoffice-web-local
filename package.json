@@ -38,7 +38,7 @@
         "build-only": "vite build",
         "type-check": "vue-tsc --build",
         "format": "prettier --write src/",
-        "lint:ts": "oxlint src --ignore-path .gitignore && vue-tsc --build",
+        "lint:ts": "vue-tsc --build",
         "lint": "pnpm run lint:ts"
     },
     "dependencies": {

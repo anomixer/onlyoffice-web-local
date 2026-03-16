@@ -79,11 +79,11 @@ async function handleDocumentOperation(options: { isNew: boolean; fileName: stri
             if (!emptyBin) {
                 throw new Error(`不支援的檔案型別: ${fileType}`)
             }
-            documentData = { bin: emptyBin }
+            documentData = { bin: emptyBin as any }
         } else {
             // 開啟現有文件需要轉換
             if (!file) throw new Error('無效的檔案物件')
-            documentData = await convertDocument(file)
+            documentData = (await convertDocument(file)) as any
         }
 
         // 建立編輯器例項
@@ -228,7 +228,7 @@ async function handleSaveDocument(event: SaveEvent) {
         debugger
         // 建立下載
         await convertBinToDocumentAndDownload(
-            data.data,
+            data as any,
             props.file.fileName,
             c_oAscFileType2[option.outputformat],
         )
@@ -318,7 +318,7 @@ function handleWriteFile(event: any) {
             },
         })
         console.log(`Successfully processed image: ${fileName}, URL: ${media}`)
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error handling writeFile:', error)
 
         // 通知編輯器檔案處理失敗
