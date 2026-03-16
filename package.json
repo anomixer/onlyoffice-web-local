@@ -1,5 +1,5 @@
 {
-    "name": "document",
+    "name": "onlyoffice-web-local",
     "version": "1.0.0",
     "description": "A local web-based document editor based on OnlyOffice, allowing you to edit documents directly in your browser without server-side processing, ensuring your privacy and security.",
     "private": true,
@@ -24,11 +24,11 @@
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/anomixer/document.git"
+    "url": "https://github.com/anomixer/onlyoffice-web-local.git"
   },
-  "homepage": "https://anomixer.github.io/document/",
+  "homepage": "https://anomixer.github.io/onlyoffice-web-local/",
   "bugs": {
-    "url": "https://github.com/anomixer/document/issues"
+    "url": "https://github.com/anomixer/onlyoffice-web-local/issues"
   },
     "scripts": {
         "dev": "vite",

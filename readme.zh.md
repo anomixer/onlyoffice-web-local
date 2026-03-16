@@ -2,7 +2,7 @@
 
 基於only-office的純本地專案，支援本地`開啟、編輯`office檔案
 
-[live-demo🪄](https://anomixer.github.io/document/)
+[live-demo🪄](https://anomixer.github.io/onlyoffice-web-local/)
 
 
 [English](README.md) | [中文](readme.zh.md)
@@ -34,7 +34,7 @@
 * `filename`（可選）：檔名，如果未提供將嘗試自動解析
 
 示例：
-[00.xlsx](https://anomixer.github.io/document/#/?url=https://sweetwisdom.github.io/react-filePreview/filePreview/00.xlsx)
+[00.xlsx](https://anomixer.github.io/onlyoffice-web-local/#/?url=https://sweetwisdom.github.io/react-filePreview/filePreview/00.xlsx)
 
 ```
 ?filename=00.pptx&url=https://example.com/files/00.pptx
