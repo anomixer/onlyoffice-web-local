@@ -28,7 +28,7 @@ jobs:
 
       # 第四步：安裝依賴
       - name: 安裝依賴
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       # 第五步：構建專案
       - name: 構建專案
