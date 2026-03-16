@@ -1,8 +1,8 @@
-# office-web-local
+# OnlyOffice Web (Vue 3)
 
 A purely local project based on OnlyOffice, supporting local `opening and editing` of Office documents.
 
-[Live Demo🪄](https://sweetwisdom.github.io/onlyoffice-web-local/)
+[Live Demo🪄](https://anomixer.github.io/document/)
 
 A local web-based document editor based on OnlyOffice, allowing you to edit documents directly in your browser without server-side processing, ensuring your privacy and security.
 
@@ -40,7 +40,7 @@ The page URL must include the following parameters:
 - `filename` (optional): File name; if not provided, it will attempt to auto-resolve
 
 Example:
-[00.xlsx](https://sweetwisdom.github.io/onlyoffice-web-local/#/?url=https://sweetwisdom.github.io/react-filePreview/filePreview/00.xlsx)
+[00.xlsx](https://anomixer.github.io/document/#/?url=https://sweetwisdom.github.io/react-filePreview/filePreview/00.xlsx)
 
 ```
 ?filename=00.pptx&url=https://example.com/files/00.pptx
