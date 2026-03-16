@@ -1,4 +1,4 @@
-// 获取文档类型
+// 獲取檔案型別
 export function getDocumentType(fileType: string): string | null {
   const type = fileType.toLowerCase();
   if (type === "docx" || type === "doc") {
@@ -11,7 +11,7 @@ export function getDocumentType(fileType: string): string | null {
   return null;
 }
 
-// 注入网站图标
+// 注入網站圖示
 export function injectFavicon(path: string): void {
   const fileType = path.split(".").pop()?.toLowerCase() || "";
   let iconPath = "";

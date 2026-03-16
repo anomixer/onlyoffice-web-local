@@ -31,11 +31,11 @@ export default defineConfig(({ mode }) => {
         vueJsx(),
         vueDevTools(),
         viteCompression({
-          filter: /\.(js|css|json|txt|ico|svg|wasm)(\?.*)?$/i, // 需要压缩的文件
-          threshold: 1024, // 文件容量大于这个值进行压缩
-          algorithm: 'gzip', // 压缩方式
-          ext: 'gz', // 后缀名
-          deleteOriginFile: false, // 压缩后是否删除压缩源文件
+          filter: /\.(js|css|json|txt|ico|svg|wasm)(\?.*)?$/i, // 需要壓縮的檔案
+          threshold: 1024, // 檔案容量大於這個值進行壓縮
+          algorithm: 'gzip', // 壓縮方式
+          ext: 'gz', // 字尾名
+          deleteOriginFile: false, // 壓縮後是否刪除壓縮原始檔
         }),
       ],
       resolve: {

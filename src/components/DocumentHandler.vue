@@ -17,7 +17,7 @@ import {
     c_oAscFileType2,
 } from '@/utils/x2t'
 const X2T = ref(null)
-// 设置prop
+// 設定prop
 const props = defineProps<{
     file: DocmentType
 }>()
@@ -25,20 +25,20 @@ const props = defineProps<{
 const editor = ref<any>(null)
 const loading = ref(false)
 
-// 全局 media 映射对象
+// 全域性 media 對映物件
 const media: { [key: string]: string } = {}
 
 onMounted(async () => {
     loading.value = true
     try {
         await initX2TScript()
-        // 加载编辑器API
+        // 載入編輯器API
         await loadEditorApi()
         await initX2T()
         console.log('app has loading')
         loading.value = false
-        // 页面初始化后，使用 watchEffect 监听 props.file 并执行 openFile
-        // 添加props.file监听
+        // 頁面初始化後，使用 watchEffect 監聽 props.file 並執行 openFile
+        // 新增props.file監聽
 
         const stopWatch = watch(
             () => props.file.fileName,
@@ -47,46 +47,46 @@ onMounted(async () => {
                     await openFile()
                 } catch (error) {
                     console.error('Error opening file:', error)
-                    alert('文件打开失败，请检查文件格式')
+                    alert('檔案開啟失敗，請檢查檔案格式')
                 }
             },
-            { immediate: true }, // 立即执行一次以处理初始值
+            { immediate: true }, // 立即執行一次以處理初始值
         )
 
-        // 组件卸载时停止监听
+        // 元件解除安裝時停止監聽
         onBeforeUnmount(stopWatch)
     } catch (error) {
         console.error('Failed to initialize editor:', error)
-        // 错误已在各函数中处理
+        // 錯誤已在各函式中處理
     }
 })
-// 合并后的文件操作方法
+// 合併後的檔案操作方法
 async function handleDocumentOperation(options: { isNew: boolean; fileName: string; file?: File }) {
     try {
         const { isNew, fileName, file } = options
         const fileType = fileName.split('.').pop() || ''
         const docType = getDocumentType(fileType)
 
-        // 获取文档内容
+        // 獲取文件內容
         let documentData: {
             bin: ArrayBuffer
             media?: any
         }
 
         if (isNew) {
-            // 新建文档使用空模板
+            // 新建文件使用空模板
             const emptyBin = g_sEmpty_bin[`.${fileType}`]
             if (!emptyBin) {
-                throw new Error(`不支持的文件类型: ${fileType}`)
+                throw new Error(`不支援的檔案型別: ${fileType}`)
             }
             documentData = { bin: emptyBin }
         } else {
-            // 打开现有文档需要转换
-            if (!file) throw new Error('无效的文件对象')
+            // 開啟現有文件需要轉換
+            if (!file) throw new Error('無效的檔案物件')
             documentData = await convertDocument(file)
         }
 
-        // 创建编辑器实例
+        // 建立編輯器例項
         createEditorInstance({
             fileName,
             fileType,
@@ -94,20 +94,20 @@ async function handleDocumentOperation(options: { isNew: boolean; fileName: stri
             media: documentData.media,
         })
     } catch (error: any) {
-        console.error('文档操作失败:', error)
-        alert(`文档操作失败: ${error.message}`)
+        console.error('文件操作失敗:', error)
+        alert(`文件操作失敗: ${error.message}`)
         throw error
     }
 }
 
-// 公共编辑器创建方法
+// 公共編輯器建立方法
 function createEditorInstance(config: {
     fileName: string
     fileType: string
     binData: ArrayBuffer
     media?: any
 }) {
-    // 清理旧编辑器实例
+    // 清理舊編輯器例項
     if (editor.value) {
         editor.value.destroyEditor()
         editor.value = null
@@ -118,7 +118,7 @@ function createEditorInstance(config: {
     editor.value = new window.DocsAPI.DocEditor('iframe', {
         document: {
             title: fileName,
-            url: fileName, // 使用文件名作为标识
+            url: fileName, // 使用檔名作為標識
             fileType: fileType,
             permissions: {
                 edit: true,
@@ -145,7 +145,7 @@ function createEditorInstance(config: {
         },
         events: {
             onAppReady: () => {
-                // 设置媒体资源
+                // 設定媒體資源
                 if (media) {
                     editor.value.sendCommand({
                         command: 'asc_setImageUrls',
@@ -153,38 +153,38 @@ function createEditorInstance(config: {
                     })
                 }
 
-                // 加载文档内容
+                // 載入文件內容
                 editor.value.sendCommand({
                     command: 'asc_openDocument',
                     data: { buf: binData },
                 })
             },
             onDocumentReady: () => {
-                console.log('文档加载完成:', fileName)
+                console.log('文件載入完成:', fileName)
             },
             onSave: handleSaveDocument,
             // writeFile
-            // todo writeFile 当外部粘贴图片时候处理
+            // todo writeFile 當外部貼上圖片時候處理
             writeFile: handleWriteFile,
         },
     })
 }
 
-// 修改后的openFile方法
+// 修改後的openFile方法
 async function openFile() {
     const { fileName, file } = props.file
 
     await handleDocumentOperation({
-        isNew: !file, // 根据是否存在file判断是否新建
+        isNew: !file, // 根據是否存在file判斷是否新建
         fileName,
         file,
     })
 }
 
 onBeforeUnmount(() => {
-    // 清理资源
+    // 清理資源
     if (editor.value) {
-        // 如果编辑器有销毁方法，调用它
+        // 如果編輯器有銷燬方法，呼叫它
         if (typeof editor.value.destroyEditor === 'function') {
             editor.value.destroyEditor()
         }
@@ -193,19 +193,19 @@ onBeforeUnmount(() => {
 
 function loadEditorApi(): Promise<void> {
     return new Promise((resolve, reject) => {
-        // 检查是否已加载
+        // 檢查是否已載入
         if (window.DocsAPI) {
             resolve()
             return
         }
 
-        // 加载编辑器API
+        // 載入編輯器API
         const script = document.createElement('script')
         script.src = './web-apps/apps/api/documents/api.js'
         script.onload = () => resolve()
         script.onerror = (error) => {
             console.error('Failed to load OnlyOffice API:', error)
-            alert('无法加载编辑器组件。请确保已正确安装 OnlyOffice API。')
+            alert('無法載入編輯器元件。請確保已正確安裝 OnlyOffice API。')
             reject(error)
         }
         document.head.appendChild(script)
@@ -226,7 +226,7 @@ async function handleSaveDocument(event: SaveEvent) {
         const { data, option } = event.data
         console.log(data, 'data')
         debugger
-        // 创建下载
+        // 建立下載
         await convertBinToDocumentAndDownload(
             data.data,
             props.file.fileName,
@@ -236,19 +236,19 @@ async function handleSaveDocument(event: SaveEvent) {
         // saveAs(blob, props.file.fileName);
     }
 
-    // 告知编辑器保存完成
+    // 告知編輯器儲存完成
     editor.value.sendCommand({
         command: 'asc_onSaveCallback',
         data: { err_code: 0 },
     })
 }
 
-// 辅助函数：将base64转为Blob
+// 輔助函式：將base64轉為Blob
 function dataURItoBlob(dataURI: string): Blob {
-    // 从base64字符串中提取数据部分
+    // 從base64字串中提取資料部分
     const byteString = atob(dataURI.split(',')[1])
 
-    // 创建ArrayBuffer
+    // 建立ArrayBuffer
     const ab = new ArrayBuffer(byteString.length)
     const ia = new Uint8Array(ab)
 
@@ -260,8 +260,8 @@ function dataURItoBlob(dataURI: string): Blob {
 }
 
 /**
- * 处理文件写入请求（主要用于处理粘贴的图片）
- * @param event - OnlyOffice 编辑器的文件写入事件
+ * 處理檔案寫入請求（主要用於處理貼上的圖片）
+ * @param event - OnlyOffice 編輯器的檔案寫入事件
  */
 function handleWriteFile(event: any) {
     debugger
@@ -275,12 +275,12 @@ function handleWriteFile(event: any) {
         }
 
         const {
-            data: imageData, // Uint8Array 图片数据
-            file: fileName, // 文件名，如 "display8image-174799443357-0.png"
-            target, // 目标对象，包含 frameOrigin 等信息
+            data: imageData, // Uint8Array 圖片資料
+            file: fileName, // 檔名，如 "display8image-174799443357-0.png"
+            target, // 目標物件，包含 frameOrigin 等資訊
         } = eventData
 
-        // 验证数据
+        // 驗證資料
         if (!imageData || !(imageData instanceof Uint8Array)) {
             throw new Error('Invalid image data: expected Uint8Array')
         }
@@ -289,18 +289,18 @@ function handleWriteFile(event: any) {
             throw new Error('Invalid file name')
         }
 
-        // 从文件名中提取扩展名
+        // 從檔名中提取副檔名
         const fileExtension = fileName.split('.').pop()?.toLowerCase() || 'png'
         const mimeType = getMimeTypeFromExtension(fileExtension)
 
-        // 创建 Blob 对象
+        // 建立 Blob 物件
         const blob = new Blob([imageData], { type: mimeType })
 
-        // 创建对象 URL
+        // 建立物件 URL
         const objectUrl = URL.createObjectURL(blob)
-        // 将图片设置为base64url
+        // 將圖片設定為base64url
         //  const base64Url = `data:${mimeType};base64,${btoa(String.fromCharCode(...imageData))}`;
-        // 将图片URL添加到媒体映射中，使用原始文件名作为key
+        // 將圖片URL新增到媒體對映中，使用原始檔名作為key
         media[`media/${fileName}`] = objectUrl
         editor.value.sendCommand({
             command: 'asc_setImageUrls',
@@ -312,7 +312,7 @@ function handleWriteFile(event: any) {
         editor.value.sendCommand({
             command: 'asc_writeFileCallback',
             data: {
-                // 图片base64
+                // 圖片base64
                 path: objectUrl,
                 imgName: fileName,
             },
@@ -321,7 +321,7 @@ function handleWriteFile(event: any) {
     } catch (error) {
         console.error('Error handling writeFile:', error)
 
-        // 通知编辑器文件处理失败
+        // 通知編輯器檔案處理失敗
         if (editor.value && typeof editor.value.sendCommand === 'function') {
             editor.value.sendCommand({
                 command: 'asc_writeFileCallback',
@@ -342,9 +342,9 @@ function handleWriteFile(event: any) {
 }
 
 /**
- * 根据文件扩展名获取 MIME 类型
- * @param extension - 文件扩展名
- * @returns string - MIME 类型
+ * 根據副檔名獲取 MIME 型別
+ * @param extension - 副檔名
+ * @returns string - MIME 型別
  */
 function getMimeTypeFromExtension(extension: string): string {
     const mimeMap: { [key: string]: string } = {
@@ -363,16 +363,16 @@ function getMimeTypeFromExtension(extension: string): string {
     return mimeMap[extension?.toLowerCase()] || 'image/png'
 }
 
-// 组件卸载时清理对象 URL
+// 元件解除安裝時清理物件 URL
 onBeforeUnmount(() => {
-    // 清理媒体资源的对象 URL
+    // 清理媒體資源的物件 URL
     Object.values(media).forEach((url) => {
         if (typeof url === 'string' && url.startsWith('blob:')) {
             URL.revokeObjectURL(url)
         }
     })
 
-    // 清理编辑器资源
+    // 清理編輯器資源
     if (editor.value) {
         if (typeof editor.value.destroyEditor === 'function') {
             editor.value.destroyEditor()

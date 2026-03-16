@@ -1,9 +1,5 @@
 <template>
   <div class="home">
-    <!-- 顶部操作区域 -->
-    <div class="top-operation-bar" v-if="!docmentObj?.fileName">
-      <el-button type="primary" @click="showCreateDialog = true">新建/打开文件</el-button>
-    </div>
     <div class="editor-content">
       <DocumentHandler
         v-if="docmentObj?.fileName"
@@ -11,41 +7,33 @@
         :file="docmentObj"
         ref="documentHandler"
       />
-      <!-- 主要内容区域 -->
+      <!-- 主要內容區域 -->
       <div class="main-content" v-else>
-        <h1>欢迎使用文档编辑器</h1>
-        <p>点击顶部按钮开始创建或打开文档</p>
+        <div id="panel-createnew">
+          <div class="header">新建</div>
+          <div class="thumb-list">
+            <div class="thumb-wrap" template="WORD" @click="onCreateNew('.docx')">
+              <div class="thumb" style="background-image: url('./img/doc-formats/docx.png')"></div>
+              <div class="title">文件</div>
+            </div>
+            <div class="thumb-wrap" template="EXCEL" @click="onCreateNew('.xlsx')">
+              <div class="thumb" style="background-image: url('./img/doc-formats/xlsx.png')"></div>
+              <div class="title">表格</div>
+            </div>
+            <div class="thumb-wrap" template="PPT" @click="onCreateNew('.pptx')">
+              <div class="thumb" style="background-image: url('./img/doc-formats/pptx.png')"></div>
+              <div class="title">簡報</div>
+            </div>
+          </div>
+          <div class="header">開啟</div>
+          <div class="open-container">
+            <el-button type="info" size="large" :icon="FolderOpened" @click="onOpenDocument" plain>
+              開啟本地檔案
+            </el-button>
+          </div>
+        </div>
       </div>
     </div>
-
-    <!-- 使用DocumentHandler组件，通过prop传递文件 -->
-
-    <!-- 面板转换为对话框 -->
-    <el-dialog v-model="showCreateDialog" title="新建/打开文件" width="450px" center>
-      <div id="panel-createnew">
-        <div class="header">新建</div>
-        <div class="thumb-list">
-          <div class="thumb-wrap" template="WORD" @click="onCreateNew('.docx')">
-            <div class="thumb" style="background-image: url('./img/doc-formats/docx.png')"></div>
-            <div class="title">文档</div>
-          </div>
-          <div class="thumb-wrap" template="EXCEL" @click="onCreateNew('.xlsx')">
-            <div class="thumb" style="background-image: url('./img/doc-formats/xlsx.png')"></div>
-            <div class="title">表格</div>
-          </div>
-          <div class="thumb-wrap" template="PPT" @click="onCreateNew('.pptx')">
-            <div class="thumb" style="background-image: url('./img/doc-formats/pptx.png')"></div>
-            <div class="title">演示文稿</div>
-          </div>
-        </div>
-        <div class="header">打开</div>
-        <div class="open-container">
-          <el-button type="info" size="large" :icon="FolderOpened" @click="onOpenDocument" plain>
-            打开本地文件
-          </el-button>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -63,14 +51,14 @@ const docmentObj = ref<DocmentType | null>(null)
 
 const onCreateNew = (ext: string) => {
   docmentObj.value = {
-    fileName: '新建文档' + ext,
+    fileName: '新建文件' + ext,
     file: null,
   }
   showCreateDialog.value = false
 }
 
 const onOpenDocument = async () => {
-  // 创建文件选择器，选择Office文档
+  // 建立檔案選擇器，選擇Office文件
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = '.docx,.xlsx,.pptx,.doc,.xls,.ppt'
@@ -88,13 +76,13 @@ const onOpenDocument = async () => {
 
   input.click()
 }
-// 页面初始化后根据路由地址获取文件 并自动打开
+// 頁面初始化後根據路由地址獲取檔案 並自動開啟
 async function initFileUrl() {
   const route = useRoute()
   const url = route.query.url as string | undefined
   const filenameParam = route.query.filename as string | undefined
   if (!url) {
-    console.warn('未提供文件 URL')
+    console.warn('未提供檔案 URL')
     return
   }
   const laodingInstance = ElLoading.service({
@@ -105,17 +93,17 @@ async function initFileUrl() {
   try {
     const res = await fetch(url)
 
-    if (!res.ok) throw new Error('文件请求失败')
+    if (!res.ok) throw new Error('檔案請求失敗')
     laodingInstance.close()
     const blob = await res.blob()
     let fileName = ''
 
-    // 1. 从 query 参数获取 filename
+    // 1. 從 query 引數獲取 filename
     if (filenameParam) {
       fileName = filenameParam
     }
 
-    // 2. 如果没有 filename 参数，尝试从 URL 末尾解析
+    // 2. 如果沒有 filename 引數，嘗試從 URL 末尾解析
     if (!fileName) {
       const match = decodeURIComponent(url).match(/\/([^\/?#]+)$/)
       if (match && match[1].includes('.')) {
@@ -123,7 +111,7 @@ async function initFileUrl() {
       }
     }
 
-    // 3. 如果 URL 也解析失败，尝试从 Content-Disposition 响应头获取
+    // 3. 如果 URL 也解析失敗，嘗試從 Content-Disposition 響應頭獲取
     if (!fileName) {
       const disposition = res.headers.get('Content-Disposition')
       if (disposition) {
@@ -134,9 +122,9 @@ async function initFileUrl() {
       }
     }
 
-    // 4. 最终还拿不到文件名，拒绝处理
+    // 4. 最終還拿不到檔名，拒絕處理
     if (!fileName) {
-      console.error('无法确定文件名，拒绝打开')
+      console.error('無法確定檔名，拒絕開啟')
       return
     }
 
@@ -145,7 +133,7 @@ async function initFileUrl() {
     docmentObj.value = { fileName, file }
     showCreateDialog.value = false
   } catch (err) {
-    console.error('加载文件失败:', err)
+    console.error('載入檔案失敗:', err)
     laodingInstance.close()
   }
 }

@@ -1,49 +1,49 @@
-name: 部署 Vite 项目到 GitHub Pages 并发布 Release 附件
+name: 部署 Vite 專案到 GitHub Pages 併發布 Release 附件
 
 on:
   push:
     branches:
-      - main  # 当 main 分支有 push 时触发
+      - main  # 當 main 分支有 push 時觸發
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # 使用最新版本的 Ubuntu 作为运行环境
+    runs-on: ubuntu-latest  # 使用最新版本的 Ubuntu 作為執行環境
     steps:
-      # 第一步：检出仓库代码
-      - name: 拉取代码
+      # 第一步：檢出倉庫程式碼
+      - name: 拉取程式碼
         uses: actions/checkout@v3
 
-      # 第二步：设置 Node.js 环境
-      - name: 设置 Node.js
+      # 第二步：設定 Node.js 環境
+      - name: 設定 Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20  # 指定 Node.js 版本
 
-      # 第三步：安装 pnpm（版本 10）
-      - name: 设置 pnpm
+      # 第三步：安裝 pnpm（版本 10）
+      - name: 設定 pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 10
-          run_install: false  # 不自动安装依赖，下一步手动执行
+          run_install: false  # 不自動安裝依賴，下一步手動執行
 
-      # 第四步：安装依赖
-      - name: 安装依赖
+      # 第四步：安裝依賴
+      - name: 安裝依賴
         run: pnpm install
 
-      # 第五步：构建项目
-      - name: 构建项目
+      # 第五步：構建專案
+      - name: 構建專案
         run: pnpm run build
 
-      # 第六步：将构建产物打包成 html.zip
-      - name: 压缩构建目录为 html.zip
+      # 第六步：將構建產物打包成 html.zip
+      - name: 壓縮構建目錄為 html.zip
         run: zip -r html.zip html
 
-      # # 第七步：将源码打包成 source.zip（排除 .git、node_modules 和 html）
-      # - name: 压缩源码为 source.zip
+      # # 第七步：將原始碼打包成 source.zip（排除 .git、node_modules 和 html）
+      # - name: 壓縮原始碼為 source.zip
       #   run: zip -r source.zip . -x '*.git*' 'node_modules/*' 'html/*'
 
-      # # 第八步：将源码打包成 source.tar（同样排除不必要内容）
-      # - name: 压缩源码为 source.tar
+      # # 第八步：將原始碼打包成 source.tar（同樣排除不必要內容）
+      # - name: 壓縮原始碼為 source.tar
       #   run: tar --exclude='./node_modules' --exclude='./.git' --exclude='./html' -cvf source.tar .
 
       # 第九步：部署到 GitHub Pages
@@ -51,15 +51,15 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./html  # 指定构建输出目录
+          publish_dir: ./html  # 指定構建輸出目錄
 
-      # 第十步：创建 GitHub Release 并上传压缩包
-      - name: 发布 Release 并上传构建包
+      # 第十步：建立 GitHub Release 並上傳壓縮包
+      - name: 釋出 Release 並上傳構建包
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: release-${{ github.run_number }}  # 每次构建使用唯一的 tag
-          name: Release ${{ github.run_number }}      # Release 名称
+          tag_name: release-${{ github.run_number }}  # 每次構建使用唯一的 tag
+          name: Release ${{ github.run_number }}      # Release 名稱
           files: |
             html.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub 自动生成的 token 授权
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub 自動生成的 token 授權

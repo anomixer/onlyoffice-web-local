@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-// 定义用户 Store
+// 定義使用者 Store
 export const useUserStore = defineStore('user', {
-  // 状态
+  // 狀態
   state: () => ({
     userId: '',
     username: '',
     isLoggedIn: false,
   }),
 
-  // Getters（类似 computed）
+  // Getters（類似 computed）
   getters: {
     fullName: (state) => `${state.username} (ID: ${state.userId})`,
     isAuthenticated: (state) => state.isLoggedIn,

@@ -1,24 +1,23 @@
-FROM node:20-alpine as build-stage
-
+ARG NODE_VERSION=22
+FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
-RUN corepack enable
-RUN corepack prepare pnpm@10 --activate
 
-RUN npm config set registry https://registry.npmmirror.com
+# Enable Corepack and install pnpm
+RUN corepack enable && \
+    corepack prepare pnpm@10.28.0 --activate
 
-COPY  package.json pnpm-lock.yaml ./
-RUN pnpm install 
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
 
+# Install dependencies (upstream uses pnpm)
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
 COPY . .
-RUN pnpm build
 
-# 若要开启gzip请将nginx镜像改为完整包
+# Build (upstream vite.config.ts builds to 'html')
+RUN pnpm run build
 
-FROM nginx:1.19.1-alpine as production-stage
-
-COPY --from=build-stage /app/html /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+FROM joseluisq/static-web-server:latest
+# Upstream builds to /app/html
+COPY --from=builder /app/html /public
