@@ -1,5 +1,5 @@
 <template>
-    <div class="editor-container" v-loaing="loading" element-loading-text="Loading...">
+    <div class="editor-container" v-loading="loading" element-loading-text="Loading...">
         <div id="iframe"></div>
     </div>
 </template>
@@ -177,7 +177,7 @@ async function openFile() {
     await handleDocumentOperation({
         isNew: !file, // 根據是否存在file判斷是否新建
         fileName,
-        file,
+        file: file ?? undefined,
     })
 }
 
